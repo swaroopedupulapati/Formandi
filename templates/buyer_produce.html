@@ -1,0 +1,21 @@
+{# buyer_produce.html #}
+{% extends 'buyer_base.html' %}
+{% block title %}Browse Produce{% endblock %}
+{% block content %}
+  <h2>🛒 Available Produce</h2>
+  <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for item in listings %}
+      <div style="flex: 1 1 250px; background: #f1f8e9; border: 1px solid #ccc; padding: 15px; border-radius: 8px;">
+        <img src="{{ item.photo }}" alt="Produce Image" style="width: 100%; height: 180px; object-fit: cover;" />
+        <h3>{{ item.name }}</h3>
+        <p><strong>Category:</strong> {{ item.category }}</p>
+        <p><strong>Price:</strong> ₹{{ item.price }}/kg</p>
+        <p><strong>Quantity:</strong> {{ item.quantity }} kg</p>
+        <p><strong>Farmer:</strong> {{ item.farmer_name }}</p>
+        <a href="{{ url_for('buyer_view_produce', produce_id=item.id) }}" style="display: inline-block; margin-top: 10px; padding: 6px 12px; background: #1565c0; color: white; text-decoration: none; border-radius: 4px;">View & Order</a>
+      </div>
+    {% else %}
+      <p>No available produce at the moment.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{# buyer_view_produce.html #}
+{% extends 'buyer_base.html' %}
+{% block title %}Place Order{% endblock %}
+{% block content %}
+<h2>📝 Order for {{ produce.name }}</h2>
+<div style="display: flex; gap: 20px; flex-wrap: wrap;">
+  <div style="flex: 1; min-width: 300px;">
+    <img src="data:image/png;base64,{{ produce.photo }}" alt="Produce" style="width: 100%; height: auto; border-radius: 10px;">
+  </div>
+  <div style="flex: 2; min-width: 300px;">
+    <p><strong>Category:</strong> {{ produce.category }}</p>
+    <p><strong>Price:</strong> ₹{{ produce.price }}/kg</p>
+    <p><strong>Available:</strong> {{ produce.quantity }} kg</p>
+    <form method="POST" action="{{ url_for('buyer_place_order', produce_id=produce.id) }}">
+      <label>Quantity (kg):</label>
+      <input type="number" name="quantity" min="1" max="{{ produce.quantity }}" required>
+      <br>
+      <label>Offer Price (₹):</label>
+      <input type="number" name="offer_price" min="1" required>
+      <br><br>
+      <button type="submit">Place Order</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

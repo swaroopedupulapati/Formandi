@@ -1,0 +1,29 @@
+
+{# buyer_orders.html #}
+{% extends 'buyer_base.html' %}
+{% block title %}My Orders{% endblock %}
+{% block content %}
+<h2>📋 My Orders</h2>
+<table style="width: 100%; border-collapse: collapse;">
+  <thead>
+    <tr style="background: #e3f2fd;">
+      <th>Produce</th>
+      <th>Quantity</th>
+      <th>Offer Price</th>
+      <th>Status</th>
+      <th>Date</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      <td>{{ order.produce_name }}</td>
+      <td>{{ order.quantity }} kg</td>
+      <td>₹{{ order.offer_price }}</td>
+      <td>{{ order.status }}</td>
+      <td>{{ order.created_at.strftime('%Y-%m-%d') }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

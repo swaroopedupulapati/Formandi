@@ -1,0 +1,29 @@
+{# farmer_orders.html #}
+{% extends 'farmer_base.html' %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h2>Incoming Orders</h2>
+<table border="1" cellpadding="10">
+  <tr>
+    <th>Buyer</th><th>Produce</th><th>Quantity</th><th>Offer Price</th><th>Status</th><th>Date</th><th>Action</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    <td>{{ order.buyer_name }}</td>
+    <td>{{ order.produce_name }}</td>
+    <td>{{ order.quantity }}</td>
+    <td>₹{{ order.offer_price }}</td>
+    <td>{{ order.status }}</td>
+    <td>{{ order.created_at }}</td>
+    <td>
+      {% if order.status == 'Pending' %}
+        <a href="{{ url_for('farmer_accept_order', order_id=order._id) }}">✅ Accept</a> |
+        <a href="{{ url_for('farmer_reject_order', order_id=order._id) }}">❌ Reject</a>
+      {% else %}
+        —
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

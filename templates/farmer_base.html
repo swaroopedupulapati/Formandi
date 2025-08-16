@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Farmer Panel{% endblock %}</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f9f9;
+    }
+
+    nav {
+      background-color: #2e7d32;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .nav-left h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    .nav-right {
+      display: flex;
+      gap: 15px;
+    }
+
+    .nav-right a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      font-size: 14px;
+      color: #888;
+    }
+
+    /* ---------- Responsive Styling ---------- */
+    @media (max-width: 768px) {
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-right {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #2e7d32;
+        margin-top: 10px;
+        padding: 10px 0;
+      }
+
+      .nav-right a {
+        margin: 10px 0;
+        padding: 0 20px;
+      }
+
+      .nav-right.active {
+        display: flex;
+      }
+
+      .nav-left h2 {
+        font-size: 20px;
+      }
+
+      .container {
+        margin: 10px;
+        padding: 15px;
+      }
+    }
+  </style>
+
+  <script>
+    function toggleNavbar() {
+      const navRight = document.getElementById('navRight');
+      navRight.classList.toggle('active');
+    }
+  </script>
+</head>
+<body>
+
+  <nav>
+    <div class="nav-left">
+      <h2>Farmandi - Farmer</h2>
+    </div>
+    <button class="nav-toggle" onclick="toggleNavbar()">☰</button>
+    <div class="nav-right" id="navRight">
+      <a href="{{ url_for('farmer_dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('farmer_add') }}">Add Produce</a>
+      <a href="{{ url_for('farmer_my_produce') }}">My Produce</a>
+      <a href="{{ url_for('farmer_orders') }}">Orders</a>
+      <a href="{{ url_for('farmer_notifications') }}">Notifications</a>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <script>alert("{{ message }}");</script>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </div>
+
+  <footer>
+    &copy; 2025 Farmandi
+  </footer>
+
+</body>
+</html>
