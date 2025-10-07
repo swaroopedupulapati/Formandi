@@ -1,0 +1,16 @@
+{% extends 'buyer_base.html' %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+  <h2>🔔 Notifications</h2>
+  <ul style="list-style: none; padding: 0;">
+    {% for note in notifications %}
+      <li style="background: {% if not note.is_read %}#fffde7{% else %}#f5f5f5{% endif %};
+                 margin: 10px 0; padding: 10px; border-radius: 6px;">
+        {{ note.message }} <br>
+        <small>{{ note.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+      </li>
+    {% else %}
+      <p>No notifications yet.</p>
+    {% endfor %}
+  </ul>
+{% endblock %}

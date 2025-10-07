@@ -1,0 +1,47 @@
+{# farmer_edit_produce.html #}
+{% extends 'farmer_base.html' %}
+{% block title %}Edit Produce{% endblock %}
+{% block content %}
+<h2>Edit Produce</h2>
+<form method="POST" enctype="multipart/form-data">
+  <label>Price (per kg):</label><br>
+  <input type="number" name="price" value="{{ item.price }}" required><br><br>
+
+  <label>Quantity (kg):</label><br>
+  <input type="number" name="quantity" value="{{ item.quantity }}" required><br><br>
+
+  <label>Status:</label><br>
+  <select name="status">
+    <option value="Available" {% if item.status == 'Available' %}selected{% endif %}>Available</option>
+    <option value="Paused" {% if item.status == 'Paused' %}selected{% endif %}>Paused</option>
+    <option value="Sold" {% if item.status == 'Sold' %}selected{% endif %}>Sold</option>
+  </select><br><br>
+
+  <label>Change Produce Image:</label><br>
+  <input type="file" name="image" accept="image/*" onchange="previewImage(event)"><br><br>
+  {% if item.image_data %}
+    <img id="imagePreview" src="data:{{ item.image_type }};base64,{{ item.image_data | b64encode }}" style="max-width: 200px; border: 1px solid #ccc; padding: 5px;">
+  {% else %}
+    <img id="imagePreview" src="#" style="display:none; max-width: 200px; border: 1px solid #ccc; padding: 5px;">
+  {% endif %}<br><br>
+
+  <button type="submit">Update Produce</button>
+</form>
+
+<script>
+  function previewImage(event) {
+    const image = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const preview = document.getElementById('imagePreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+  }
+</script>
+{% endblock %}

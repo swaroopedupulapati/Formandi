@@ -1,0 +1,57 @@
+
+{% extends 'farmer_base.html' %}
+{% block title %}Orders{% endblock %}
+{% block content %}
+<h2>📦 Incoming Orders</h2>
+
+{% if orders %}
+<table style="width:100%; border-collapse:collapse; margin-top:15px;">
+  <thead>
+    <tr style="background:#e8f5e9;">
+      <th>Produce</th>
+      <th>Buyer</th>
+      <th>Phone</th>
+      <th>Address</th>
+      <th>Quantity</th>
+      <th>Offer Price</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr style="border-bottom:1px solid #ccc;">
+      <td>{{ order.produce_name }}</td>
+      <td>{{ order.buyer_name }}</td>
+      <td>{{ order.buyer_phone }}</td>
+      <td>{{ order.buyer_address }}</td>
+      <td>{{ order.quantity }} kg</td>
+      <td>₹{{ order.offer_price }}</td>
+      <td>{{ order.status }}</td>
+      <td>
+        {% if order.status == 'Pending' %}
+          <a href="{{ url_for('farmer_update_order', order_id=order._id, action='accept') }}" 
+             style="background:#4caf50;color:white;padding:5px 10px;border-radius:4px;text-decoration:none;">Accept</a>
+          <a href="{{ url_for('farmer_update_order', order_id=order._id, action='reject') }}" 
+             style="background:#f44336;color:white;padding:5px 10px;border-radius:4px;text-decoration:none;">Reject</a>
+        {% elif order.status == 'Accepted' %}
+          <a href="{{ url_for('farmer_update_order', order_id=order._id, action='pack') }}" 
+             style="background:#ff9800;color:white;padding:5px 10px;border-radius:4px;text-decoration:none;">Mark Packed</a>
+        {% elif order.status == 'Packed' %}
+          <a href="{{ url_for('farmer_update_order', order_id=order._id, action='out_for_delivery') }}" 
+             style="background:#2196f3;color:white;padding:5px 10px;border-radius:4px;text-decoration:none;">Out for Delivery</a>
+        {% elif order.status == 'Out for Delivery' %}
+          <a href="{{ url_for('farmer_update_order', order_id=order._id, action='delivered') }}" 
+             style="background:#8bc34a;color:white;padding:5px 10px;border-radius:4px;text-decoration:none;">Mark Delivered</a>
+        {% else %}
+          <em>{{ order.status }}</em>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+  <p>No orders yet.</p>
+{% endif %}
+{% endblock %}

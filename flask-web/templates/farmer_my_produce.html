@@ -1,0 +1,32 @@
+
+{# farmer_my_produce.html #}
+{% extends 'farmer_base.html' %}
+{% block title %}My Produce{% endblock %}
+{% block content %}
+<h2>My Produce Listings</h2>
+<table border="1" cellpadding="10">
+  <tr>
+    <th>Image</th><th>Name</th><th>Category</th><th>Price</th><th>Quantity</th><th>Status</th><th>Actions</th>
+  </tr>
+  {% for item in produce %}
+  <tr>
+    <td>
+      {% if item.image_data %}
+        <img src="data:{{ item.image_type }};base64,{{ item.image_data | b64encode }}" width="100" alt="{{ item.name }}">
+      {% else %}
+        <img src="{{ url_for('static', filename='default_images/' ~ item.name|lower ~ '.jpg') }}" width="100" alt="{{ item.name }}">
+      {% endif %}
+    </td>
+    <td>{{ item.name }}</td>
+    <td>{{ item.category }}</td>
+    <td>{{ item.price }}</td>
+    <td>{{ item.quantity }}</td>
+    <td>{{ item.status }}</td>
+    <td>
+      <a href="{{ url_for('farmer_edit_produce', produce_id=item._id) }}">Edit</a> |
+      <a href="{{ url_for('farmer_delete_produce', produce_id=item._id) }}" onclick="return confirm('Are you sure?')">Delete</a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

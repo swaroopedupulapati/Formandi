@@ -1,0 +1,69 @@
+
+{% extends 'buyer_base.html' %}
+{% block title %}Place Order{% endblock %}
+{% block content %}
+<h2>🛒 Order for {{ produce.name }}</h2>
+
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+  <div style="flex: 1; min-width: 300px;">
+    <img src="{{ produce.photo }}" alt="Produce" style="width: 100%; border-radius: 10px;">
+  </div>
+
+  <div style="flex: 2; min-width: 300px;">
+    <p><strong>Category:</strong> {{ produce.category }}</p>
+    <p><strong>Price:</strong> ₹{{ produce.price }}/kg</p>
+    <p><strong>Available:</strong> {{ produce.quantity }} kg</p>
+    <p><strong>Farmer:</strong> {{ produce.farmer_name }}</p>
+
+    <!-- Buy Button -->
+    <button id="buyButton" 
+            style="background:#1565c0;color:white;padding:10px 20px;
+                   border:none;border-radius:5px;cursor:pointer;margin-top:10px;">
+      🛒 Buy Now
+    </button>
+
+    <!-- Hidden Order Form -->
+    <form id="orderForm" method="POST" 
+          action="{{ url_for('buyer_view_produce', produce_id=produce.id) }}" 
+          style="display:none;margin-top:20px;">
+
+      <h3>🧾 Order Details</h3>
+      <label>Quantity (kg):</label><br>
+      <input type="number" name="quantity" min="1" max="{{ produce.quantity }}" required><br><br>
+
+      <label>Offer Price (₹):</label><br>
+      <input type="number" name="offer_price" min="1" required><br><br>
+
+      <h3>🚚 Delivery Details</h3>
+      <label>Full Name:</label><br>
+      <input type="text" name="buyer_name" placeholder="Your full name" required><br><br>
+
+      <label>Phone Number:</label><br>
+      <input type="text" name="buyer_phone" placeholder="10-digit phone number" required><br><br>
+
+      <label>Delivery Address:</label><br>
+      <textarea name="buyer_address" rows="3" placeholder="House No, Street, Village, Pincode" required></textarea><br><br>
+
+      <button type="submit" 
+              style="background:#1565c0;color:white;padding:10px 20px;
+                     border:none;border-radius:5px;cursor:pointer;">
+        Confirm Order
+      </button>
+    </form>
+  </div>
+</div>
+
+<script>
+  // Show form when clicking Buy Now
+  document.addEventListener("DOMContentLoaded", function() {
+    const buyBtn = document.getElementById("buyButton");
+    const form = document.getElementById("orderForm");
+
+    buyBtn.addEventListener("click", function() {
+      form.style.display = "block";
+      buyBtn.style.display = "none";
+      window.scrollTo({ top: form.offsetTop - 50, behavior: "smooth" });
+    });
+  });
+</script>
+{% endblock %}

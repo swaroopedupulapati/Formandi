@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login/Register | Farmandi</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f2f2f2;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      max-width: 900px;
+      margin: 30px auto;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .left-panel {
+      background-color: #2e7d32;
+      color: white;
+      padding: 40px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .left-panel h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .left-panel p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .right-panel {
+      flex: 1;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form {
+      display: none;
+      flex-direction: column;
+    }
+
+    .form.active {
+      display: flex;
+    }
+
+    .form input, .form select, .form button {
+      padding: 12px;
+      margin: 10px 0;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    .form button {
+      background-color: #2e7d32;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .form button:hover {
+      background-color: #256428;
+    }
+
+    .switch-link {
+      font-size: 14px;
+      margin-top: 12px;
+    }
+
+    .switch-link a {
+      color: #2e7d32;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .pincode-row {
+      display: flex;
+      gap: 10px;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .pincode-row input {
+      flex: 2;
+    }
+
+    .pincode-row button {
+      flex: 1;
+      padding: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        margin: 10px;
+      }
+
+      .left-panel, .right-panel {
+        padding: 20px;
+      }
+
+      .pincode-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="left-panel">
+    <h1 style="text-align: center;font-size: 3vw;">Farmandi</h1>
+    <p>Empowering Farmers to connect directly with Buyers, Retailers, and Distributors. Simplify your selling process and increase your profit.</p>
+  </div>
+
+  <div class="right-panel">
+    <!-- Flash messages -->
+    <script>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            alert("{{ message }}");
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </script>
+
+    <!-- Login Form -->
+    <form class="form active" id="loginForm" method="POST" action="/login">
+      <h2>Login</h2>
+      <input type="text" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+      <select name="user_type" required>
+        <option value="">-- Select User Type --</option>
+        <option value="farmer">Farmer</option>
+        <option value="buyer">Buyer</option>
+        <option value="retailer">Retailer</option>
+        <option value="distributor">Distributor</option>
+        <option value="admin">Admin</option>
+      </select>
+      <button type="submit">Login</button>
+      <div class="switch-link">
+        Don't have an account? <a onclick="toggleForm('register')">Register here</a>
+      </div>
+    </form>
+
+    <!-- Register Form -->
+    <form class="form" id="registerForm" method="POST" action="/register">
+      <h2>Register</h2>
+      <input type="text" name="name" placeholder="Full Name" required />
+      <input type="text" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+
+      <!-- Pincode + Button -->
+      <div class="pincode-row">
+        <input type="text" name="pincode" id="pincode" placeholder="Enter Pincode" required />
+        <button type="button" onclick="getLocationDetails()">Get Location</button>
+      </div>
+
+      <!-- Village Dropdown -->
+      <select name="village" id="village" required>
+        <option value="">-- Select Village/Post Office --</option>
+      </select>
+
+      <input type="text" name="district" id="district" placeholder="District" readonly required />
+      <input type="text" name="state" id="state" placeholder="State" readonly required />
+
+      <select name="user_type" required>
+        <option value="">-- Select User Type --</option>
+        <option value="farmer">Farmer</option>
+        <option value="buyer">Buyer</option>
+        <option value="retailer">Retailer</option>
+        <option value="distributor">Distributor</option>
+        <option value="admin">Admin</option>
+      </select>
+
+      <button type="submit">Register</button>
+      <div class="switch-link">
+        Already have an account? <a onclick="toggleForm('login')">Login here</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toggle Forms + Pincode Fetch -->
+<script>
+  function toggleForm(formName) {
+    document.getElementById('loginForm').classList.remove('active');
+    document.getElementById('registerForm').classList.remove('active');
+    document.getElementById(formName + 'Form').classList.add('active');
+  }
+
+  function getLocationDetails() {
+    const pin = document.getElementById('pincode').value;
+    const villageSelect = document.getElementById('village');
+    const districtInput = document.getElementById('district');
+    const stateInput = document.getElementById('state');
+
+    villageSelect.innerHTML = '<option value="">-- Select Village/Post Office --</option>';
+    districtInput.value = '';
+    stateInput.value = '';
+
+    if (pin.length === 6) {
+      fetch(`https://api.postalpincode.in/pincode/${pin}`)
+        .then(res => res.json())
+        .then(data => {
+          const postOffices = data[0].PostOffice;
+          if (postOffices && postOffices.length > 0) {
+            postOffices.forEach(post => {
+              const option = document.createElement('option');
+              option.value = post.Name;
+              option.text = post.Name;
+              villageSelect.appendChild(option);
+            });
+
+            districtInput.value = postOffices[0].District;
+            stateInput.value = postOffices[0].State;
+          } else {
+            alert("Invalid Pincode or no data found.");
+          }
+        })
+        .catch(err => {
+          alert("Error fetching location info.");
+        });
+    } else {
+      alert("Enter a valid 6-digit pincode.");
+    }
+  }
+</script>
+
+</body>
+</html>

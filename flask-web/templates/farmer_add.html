@@ -1,0 +1,48 @@
+{# farmer_add.html #}
+{% extends 'farmer_base.html' %}
+{% block title %}Add Produce{% endblock %}
+{% block content %}
+<h2>Add New Produce</h2>
+<form method="POST" enctype="multipart/form-data">
+  <label>Name:</label><br>
+  <input type="text" name="name" required><br><br>
+
+  <label>Category:</label><br>
+  <select name="category" required>
+    <option>Vegetable</option>
+    <option>Fruit</option>
+    <option>Grain</option>
+    <option>Pulses</option>
+    <option>Other</option>
+  </select><br><br>
+
+  <label>Price (per kg):</label><br>
+  <input type="number" step="0.01" name="price" required><br><br>
+
+  <label>Quantity (kg):</label><br>
+  <input type="number" step="0.01" name="quantity" required><br><br>
+
+  <label>Upload Produce Image:</label><br>
+  <input type="file" name="image" accept="image/*" onchange="previewImage(event)"><br><br>
+  <img id="imagePreview" src="#" alt="Image Preview" style="display:none; max-width: 200px; border: 1px solid #ccc; padding: 5px;"><br><br>
+
+  <button type="submit">Add Produce</button>
+</form>
+
+<script>
+  function previewImage(event) {
+    const image = event.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const preview = document.getElementById('imagePreview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+
+    if (image) {
+      reader.readAsDataURL(image);
+    }
+  }
+</script>
+{% endblock %}
